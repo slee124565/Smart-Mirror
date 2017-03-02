@@ -2,6 +2,9 @@
 # requirements
 # requests, feedparser, traceback, Pillow
 
+import os, sys
+sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
+
 from Tkinter import *
 import locale
 import threading
@@ -20,10 +23,11 @@ ip = '<IP>'
 ui_locale = '' # e.g. 'fr_FR' fro French, '' as default
 time_format = 12 # 12 or 24
 date_format = "%b %d, %Y" # check python doc for strftime() for options
-news_country_code = 'us'
+news_country_code = 'tw'
 weather_api_token = '<TOKEN>' # create account at https://darksky.net/dev/
-weather_lang = 'en' # see https://darksky.net/dev/docs/forecast for full list of language parameters values
-weather_unit = 'us' # see https://darksky.net/dev/docs/forecast for full list of unit parameters values
+weather_api_token = '50b04df4ba6362438e464eb78134a9e1'
+weather_lang = 'zh-tw' # see https://darksky.net/dev/docs/forecast for full list of language parameters values
+weather_unit = 'auto' # see https://darksky.net/dev/docs/forecast for full list of unit parameters values
 
 @contextmanager
 def setlocale(name): #thread proof function to work with locale
@@ -105,10 +109,10 @@ class Weather(Frame):
         self.icon = ''
         self.degreeFrm = Frame(self, bg="black")
         self.degreeFrm.pack(side=TOP, anchor=W)
-        self.temperatureLbl = Label(self.degreeFrm, font=('Helvetica', 94), fg="white", bg="black")
-        self.temperatureLbl.pack(side=LEFT, anchor=N)
         self.iconLbl = Label(self.degreeFrm, bg="black")
-        self.iconLbl.pack(side=LEFT, anchor=N, padx=20)
+        self.iconLbl.pack(side=TOP, anchor=W)
+        self.temperatureLbl = Label(self.degreeFrm, font=('Helvetica', 94), fg="white", bg="black")
+        self.temperatureLbl.pack(side=TOP, anchor=W)
         self.currentlyLbl = Label(self, font=('Helvetica', 28), fg="white", bg="black")
         self.currentlyLbl.pack(side=TOP, anchor=W)
         self.forecastLbl = Label(self, font=('Helvetica', 18), fg="white", bg="black")
@@ -187,7 +191,7 @@ class Weather(Frame):
                     self.locationLbl.config(text=location2)
         except Exception as e:
             traceback.print_exc()
-            print "Error: %s. Cannot get weather." % e
+            print ("Error: %s. Cannot get weather." % e)
 
         self.after(600000, self.get_weather)
 
@@ -224,7 +228,7 @@ class News(Frame):
                 headline.pack(side=TOP, anchor=W)
         except Exception as e:
             traceback.print_exc()
-            print "Error: %s. Cannot get news." % e
+            print ("Error: %s. Cannot get news." % e)
 
         self.after(600000, self.get_headlines)
 
@@ -315,4 +319,5 @@ class FullscreenWindow:
 
 if __name__ == '__main__':
     w = FullscreenWindow()
+    w.toggle_fullscreen()
     w.tk.mainloop()
